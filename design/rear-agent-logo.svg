@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">背屏亮点</title>
+  <desc id="desc">石墨黑底上的横向背屏，内有象牙白终端提示符和薄荷绿状态点。</desc>
+  <rect width="512" height="512" rx="116" fill="#1D2426"/>
+  <rect x="94" y="157" width="324" height="198" rx="46" fill="#53615F"/>
+  <rect x="106" y="169" width="300" height="174" rx="35" fill="#0C1213"/>
+  <path d="m187 222 36 34-36 34" fill="none" stroke="#F0F6F2" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="316" cy="256" r="19" fill="#83F2B9"/>
+</svg>

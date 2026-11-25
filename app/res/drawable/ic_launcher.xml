@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android vector equivalent of design/rear-agent-logo.svg. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="512" android:viewportHeight="512">
+    <path android:fillColor="#1D2426" android:pathData="M116,0H396A116,116 0 0 1 512,116V396A116,116 0 0 1 396,512H116A116,116 0 0 1 0,396V116A116,116 0 0 1 116,0Z" />
+    <path android:fillColor="#53615F" android:pathData="M140,157H372A46,46 0 0 1 418,203V309A46,46 0 0 1 372,355H140A46,46 0 0 1 94,309V203A46,46 0 0 1 140,157Z" />
+    <path android:fillColor="#0C1213" android:pathData="M141,169H371A35,35 0 0 1 406,204V308A35,35 0 0 1 371,343H141A35,35 0 0 1 106,308V204A35,35 0 0 1 141,169Z" />
+    <path android:fillColor="#83F2B9" android:pathData="M297,256a19,19 0 1 0 38,0a19,19 0 1 0 -38,0Z" />
+    <path android:pathData="M187,222L223,256L187,290"
+        android:strokeColor="#F0F6F2" android:strokeWidth="25"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+</vector>

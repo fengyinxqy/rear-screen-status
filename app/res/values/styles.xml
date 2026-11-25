@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Theme for the rear panel.
+
+        HyperOS will not start an activity directly onto the rear display, so placement starts
+        the panel on the FRONT display and moves the task afterwards. During that gap the system
+        paints the activity's STARTING WINDOW using this theme's windowBackground — and runtime
+        window flags cannot touch it, because the starting window belongs to the window manager,
+        not to the activity. With an opaque black theme that starting window appeared as a black
+        card over the front screen, swallowing the top of the display and every tap in it.
+
+        A transparent, non-dimming background makes the gap invisible: nothing is painted until
+        the activity itself resumes on the rear display.
+    -->
+    <!--
+        Theme for the settings screen: the same black glass as the panel.
+
+        The window background is set here rather than only in code so the very first frame is
+        black — an app that opens on a white card and then turns black reads as a flash, and on
+        this phone the settings screen is opened at night.
+    -->
+    <style name="Theme.Rear.Settings" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">#FF101015</item>
+        <item name="android:colorBackground">#FF101015</item>
+        <item name="android:statusBarColor">#FF101015</item>
+        <item name="android:navigationBarColor">#FF101015</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Rear.Panel" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>
