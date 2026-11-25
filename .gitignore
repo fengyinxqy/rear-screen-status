@@ -19,3 +19,4 @@ __pycache__/
 /app/res/drawable-nodpi/agent_*.png
 /design/*
 !/design/rear-agent-logo.svg
+/shots/
