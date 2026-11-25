@@ -9,6 +9,16 @@ Claude Code 和 Codex 会把会话写进 `~/.claude`、`~/.codex`，daemon 扫�
 
 ## 安装
 
+### 方式一：从 npm 装（一条命令）
+
+```bash
+dsh plugin --profile web add dsh-plugin-rear-status
+```
+
+把 `web` 换成你实际使用的 profile。装完重启 DSH 或新开会话。若提示找不到包（镜像尚未同步），改用方式二。
+
+### 方式二：从源码装
+
 1）把插件放到 DSH 的私有目录：
 
 ```bash

@@ -122,7 +122,7 @@ rear status daemon on http://0.0.0.0:8770/status.json
 | Claude Code | `UserPromptSubmit`、`PreToolUse` | `python tools/hook_status.py working` |
 | Claude Code | `Stop` | `python tools/hook_status.py idle` |
 | Codex | 会话开始 / 结束 | 同上两种 |
-| DSH | 生命周期事件 | 装 [DSH 插件](docs/dsh-plugin.md)（一次配置） |
+| DSH | 生命周期事件 | [DSH 插件](docs/dsh-plugin.md)：一条命令安装 |
 
 把命令写进对应 Agent 的 hooks 配置即可。`hook_status.py` 除了 POST `/push`，还会把同一份 JSON 写到 `~/.rear-status/status.json`，所以手机也可以直接读文件，不跑 daemon。
 

@@ -1,0 +1,48 @@
+{
+  "name": "dsh-plugin-rear-status",
+  "version": "0.1.0",
+  "description": "DSH 插件：把 DSH 会话状态推给小米背屏（背屏亮点）的状态 daemon。",
+  "type": "module",
+  "main": "./dsh-plugin.mjs",
+  "exports": {
+    ".": "./dsh-plugin.mjs",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "dsh-plugin.mjs",
+    "cordis.patch.yml",
+    "config.example.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "xiaomi",
+    "hyperos",
+    "rear-screen",
+    "agent-status"
+  ],
+  "license": "MIT",
+  "author": "fengyinxqy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fengyinxqy/rear-screen-status.git",
+    "directory": "tools/dsh"
+  },
+  "homepage": "https://github.com/fengyinxqy/rear-screen-status/blob/main/docs/dsh-plugin.md",
+  "bugs": {
+    "url": "https://github.com/fengyinxqy/rear-screen-status/issues"
+  }
+}
