@@ -10,6 +10,8 @@
 
 <img src="docs/screenshots/panel-developing.png" width="820" alt="背屏面板：开发中，2 会话，任务 fix-login-retry">
 
+> 不想自己动手？把[交给 Agent 安装](#交给-agent-安装)里那段提示词发给你的 Agent，它会装好并验证。
+
 ## 它解决什么问题
 
 写代码时，AI Agent 在另一块屏幕里跑着。要判断它到底在干活还是停了，得切窗口、看终端——一次两次无所谓，一天几十次就是把注意力切碎。
@@ -122,6 +124,70 @@ rear status daemon on http://0.0.0.0:8770/status.json
 | DSH | 插件自动推送 | 无需配置 |
 
 把命令写进对应 Agent 的 hooks 配置即可。`hook_status.py` 除了 POST `/push`，还会把同一份 JSON 写到 `~/.rear-status/status.json`，所以手机也可以直接读文件，不跑 daemon。
+
+## 交给 Agent 安装
+
+不想一步步手敲命令？把下面整段发给本机的 **Claude Code / Codex / DSH**。它会检查环境、起状态服务、从 Releases 装 APK、验证面板真的在背屏上，并把只有你能做的两步列出来。
+
+它会先读一遍项目文档，再按验证结果汇报——不会用「应该可以」糊过去。
+
+````text
+你是这台电脑上的 AI Agent。请把开源项目「背屏亮点」在这台电脑和连着的小米手机上装好，并确认背屏真的在显示状态。每一步都要用命令确认结果，再进入下一步。
+
+【背景】
+- 项目：https://github.com/fengyinxqy/rear-screen-status （有问题先读它的 README）
+- 作用：把本机 AI Agent 的状态显示到小米手机背屏（display 1）。
+- 组成：PC 端 Python daemon（HTTP :8770）＋ Android App（包名 com.dsh.rearscreen，依赖独立安装的 Shizuku）。
+- 只适用于有背屏的小米机型。手机没有背屏时，做到「daemon 可用」就停下并说明。
+
+【硬性约束】
+- 不要 uninstall 现有的 com.dsh.rearscreen，除非用户明确同意——卸载会清空应用设置。
+- 不要把 8770 端口映射到公网，不要关防火墙，不要改全局代理。
+- 遇到 `INSTALL_FAILED_USER_RESTRICTED`：先请用户解锁手机，征得同意后再执行
+  `adb shell settings put global adb_install_need_confirm 0`，装完提示用户可以改回 1。
+- 面板绝不能停在主屏。确认不了它在 display 1 就停下报告，不要交付。
+
+【第 1 步 环境】
+1. 检查 `python3 --version`（需 3.10+）、`git --version`、`adb version`。
+2. `adb devices -l` 确认有一台小米设备且状态是 device；没有就请用户打开 USB 调试并授权。
+3. 不在项目目录里就先 clone：`git clone https://github.com/fengyinxqy/rear-screen-status.git`。
+
+【第 2 步 起状态服务】
+1. 取本机与手机同网段的局域网 IP（Windows `ipconfig`，macOS `ipconfig getifaddr en0`，Linux `hostname -I`）。
+2. 后台启动并留日志：`python3 tools/statusd.py --bind 0.0.0.0 > /tmp/rear-status.log 2>&1 &`（Windows 用等价写法），记下实际命令和日志路径。
+3. 自检：`curl -s http://127.0.0.1:8770/health` 返回 ok；`curl -s http://127.0.0.1:8770/status.json` 返回 JSON。
+4. 记下手机要填的地址：`http://<局域网IP>:8770/status.json`。
+
+【第 3 步 装 App】
+1. 下载最新 APK：`gh release download -R fengyinxqy/rear-screen-status -p '*.apk'`；没有 gh 就从 Releases 页面取最新 APK。同 Release 的 `SHA256SUMS` 可用于校验。
+2. `adb install -r <apk>`，失败按【硬性约束】处理并重试一次。
+3. 记录版本：`adb shell dumpsys package com.dsh.rearscreen | grep -E "versionCode|versionName"`。
+
+【第 4 步 只有人能做的两步——请用户操作，然后等他回复完成】
+1. 在手机上启动 Shizuku（未安装则从 https://shizuku.rikka.app/ 安装），通过无线调试启动。
+2. 打开「背屏亮点」：授予 Shizuku 权限 → 状态源填上面那个 URL → 保存并测试 → 选中 display 1 · 背屏 → 开始背屏显示。
+   同时提醒：设置 → 应用 → 背屏亮点 → 自启动打开、省电策略选无限制、最近任务里加锁。
+   如果手机上的「保存并测试」失败，先查电脑防火墙是否放行 8770（同网段、不是公网）。
+
+【第 5 步 验证——全部通过才算装好】
+1. 电脑上 `curl` 上面的 URL，确认返回 JSON。
+2. 逻辑屏：`adb shell dumpsys activity activities` 里 RearActivity 应落在 `Display #1` 段；`adb shell dumpsys window windows` 里该窗口的 `mDisplayId` 应为 1。
+3. 主屏干净：`Display #0` 段不应出现 RearActivity 的可视窗口。
+4. 真机截图：先 `adb shell dumpsys SurfaceFlinger --display-id` 找到 976×596 那块屏的**物理** display id，再
+   `adb shell screencap -d <物理id> -p /data/local/tmp/rear.png && adb pull /data/local/tmp/rear.png`。
+   看图确认显示的是面板而不是壁纸（用 `-d 1` 猜逻辑 id 会失败）。
+5. 刷新链路：推一次状态并观察面板变化
+   `curl -s -X POST http://127.0.0.1:8770/push -H 'Content-Type: application/json' -d '{"status":"developing","agent":"claude","active":1,"detail":"setup-check"}'`
+   面板应在 1 秒内变成「开发中」；再把 status 改成 idle 验证回落。
+
+【第 6 步 汇报】
+用清单告诉用户：daemon 的启动命令与日志位置、APK 版本、手机要保留的三项系统设置、第 5 步每一条的结论、以及怎么停（停 daemon、在 App 里点「停止背屏显示」）。没通过的照实写，不要用「应该可以」代替。
+
+【可选：让你自己上屏】
+如果用户希望你这个 Agent 干活时背屏就亮：开工前推 `{"status":"developing","agent":"<你的名字>","active":1,"detail":"<当前项目>"}`，收工推 `{"status":"idle","agent":"<你的名字>","active":0}`。推送有效期：开发中 180 秒、空闲 300 秒，长任务中途要重发。
+````
+
+> 提示词里没有任何密钥或私有地址，URL 由 Agent 现场探测后填入。装完想恢复 ADB 安装确认：`adb shell settings put global adb_install_need_confirm 1`。
 
 ## 状态协议
 
