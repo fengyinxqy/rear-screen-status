@@ -24,6 +24,8 @@ HyperOS 的背屏本来是给通知和自拍用的，正好适合干这件事：
 
 ![三种状态：开发中、空闲、未连接](docs/screenshots/panel-states.png)
 
+*左起：开发中、空闲、未连接。*
+
 - **开发中**——有 Agent 正在干活。大字状态词，配会话数与任务名；左侧状态脊线是一段缓慢走动的亮块。
 - **空闲**——没有在跑的会话。状态词压暗，不抢注意力。
 - **未连接**——状态源没有响应。整屏转红，写明原因、地址和「点按重试」，不印英文 socket 报错。
@@ -32,7 +34,9 @@ HyperOS 的背屏本来是给通知和自拍用的，正好适合干这件事：
 
 ### 正在跑的是谁
 
-![Agent 标记](docs/screenshots/panel-agents.png)
+![Agent 标记：DSH、Codex、三个同时在跑](docs/screenshots/panel-agents.png)
+
+*左起：DSH 在跑、Codex 在跑、三个同时在跑。*
 
 右侧只显示**当前正在跑**的 Agent：DSH 是鲸鱼，Claude Code 是星芒，Codex 是交织结。单个标记落在固定中轴上，多个按固定顺序竖排；空闲时不占位置。
 
