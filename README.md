@@ -114,14 +114,14 @@ rear status daemon on http://0.0.0.0:8770/status.json
 
 ### 3. 接入 Agent 事件（可选，但更快）
 
-没有 hook 时，daemon 靠扫描会话文件也能工作，只是开始与结束会晚几秒。接上 hook 就是即时的：
+没有 hook 时，daemon 靠扫描会话文件也能工作，只是开始与结束会晚几秒。接上 hook 就是即时的。**DSH 是例外**——它没有可扫描的会话文件，需要一个[专用的 DSH 插件](docs/dsh-plugin.md)：
 
 | Agent | 事件 | 命令 |
 |---|---|---|
 | Claude Code | `UserPromptSubmit`、`PreToolUse` | `python tools/hook_status.py working` |
 | Claude Code | `Stop` | `python tools/hook_status.py idle` |
 | Codex | 会话开始 / 结束 | 同上两种 |
-| DSH | 插件自动推送 | 无需配置 |
+| DSH | 生命周期事件 | 装 [DSH 插件](docs/dsh-plugin.md)（一次配置） |
 
 把命令写进对应 Agent 的 hooks 配置即可。`hook_status.py` 除了 POST `/push`，还会把同一份 JSON 写到 `~/.rear-status/status.json`，所以手机也可以直接读文件，不跑 daemon。
 
@@ -259,9 +259,9 @@ adb install -r build/rear-screen-status.apk
 
 ```
 app/            Android 源码（面板、设置页、Shizuku 服务）
-tools/          PC 端 daemon 与 hook
+tools/          PC 端 daemon、hook 与 DSH 插件（tools/dsh/）
 tests/          daemon 端到端测试 + 解析逻辑测试
-docs/           构建说明、第三方许可、截图
+docs/           构建说明、DSH 插件、第三方许可、截图
 design/         图标源文件（SVG）
 build.sh        免 Gradle 构建脚本
 ```

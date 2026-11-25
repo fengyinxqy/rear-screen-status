@@ -1,0 +1,4 @@
+{
+  "_comment": "Optional. Copy to ~/.dsh/rear-status/config.json to move the endpoint; REAR_STATUS_URL overrides it.",
+  "endpoint": "http://127.0.0.1:8770"
+}
